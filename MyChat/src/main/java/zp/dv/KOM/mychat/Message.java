@@ -1,5 +1,6 @@
 package zp.dv.KOM.mychat;
 
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,44 +9,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Message implements Serializable {
-    private String name;
-    private String text;
-    private String date;
+    private String mName;
+    private String mText;
+    private String mDate;
+    private int mColor;
 
-    public Message(String name, String text, String date) {
-        super();
-        this.name = name;
-        this.text = text;
-        this.date = date;
+    public Message(String name, String text, String date, int color) {
+        this.mName = name;
+        this.mText = text;
+        this.mDate = date;
+        this.mColor = color;
+    }
+
+    public int getmColor() {
+        return mColor;
+    }
+
+    public void setmColor(int mColor) {
+        this.mColor = mColor;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.mName = name;
     }
 
     public String getText() {
-        return text;
+        return mText;
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.mText = text;
     }
 
     public String getDate() {
-        return date;
+        return mDate;
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.mDate = date;
     }
 
     @Override
     public String toString() {
-        return "message [name=" + name + ", text=" + text + ", date=" + date
+        return "message [name=" + mName + ", text=" + mText + ", date=" + mDate
                 + "]";
     }
 }

@@ -1,7 +1,6 @@
 package zp.dv.KOM.mychat;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,28 +10,28 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class ChatAdapter extends BaseAdapter {
-    private Context context;
-    private LayoutInflater linflater;
-    private ArrayList<Message> messages;
+    private Context mContext;
+    private LayoutInflater mLinflater;
+    private ArrayList<Message> mMessages;
 
     public void setMessages(ArrayList<Message> messages) {
-        this.messages = messages;
+        this.mMessages = messages;
     }
 
     public ChatAdapter(Context context, ArrayList<Message> messages) {
-        this.context = context;
-        this.linflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.messages = messages;
+        this.mContext = context;
+        this.mLinflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.mMessages = messages;
     }
 
     @Override
     public int getCount() {
-        return messages.size();
+        return mMessages.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return messages.get(position);
+        return mMessages.get(position);
     }
 
     @Override
@@ -43,29 +42,28 @@ public class ChatAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder =  new ViewHolder();
         if (convertView == null) {
-            convertView = linflater.inflate(R.layout.activity_item, null);
-            holder.lUserName = (TextView) convertView.findViewById(R.id.topText);
-            holder.lMessage = (TextView) convertView.findViewById(R.id.botText);
-            holder.lDate = (TextView) convertView.findViewById(R.id.rightText);
+            convertView = mLinflater.inflate(R.layout.message_item, null);
+            holder.mVHUserName = (TextView) convertView.findViewById(R.id.topText);
+            holder.mVHMessage = (TextView) convertView.findViewById(R.id.botText);
+            holder.mVHDate = (TextView) convertView.findViewById(R.id.rightText);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.lUserName.setText(messages.get(position).getName());
-        holder.lMessage.setText(messages.get(position).getText());
-        holder.lDate.setText(String.valueOf(messages.get(position).getDate()));
+        holder.mVHUserName.setText(mMessages.get(position).getName());
+        holder.mVHUserName.setTextColor(mMessages.get(position).getmColor());
 
-        if (holder.lUserName.getText().toString().equals(Bot.getBotName()))
-            holder.lUserName.setTextColor(Color.BLUE);
-        else holder.lUserName.setTextColor(Color.RED);
+        holder.mVHMessage.setText(mMessages.get(position).getText());
+        holder.mVHDate.setText(String.valueOf(mMessages.get(position).getDate()));
+
         convertView.setTag(holder);
 
         return convertView;
     }
 
     class ViewHolder {
-        TextView lUserName;
-        TextView lMessage;
-        TextView lDate;
+        private TextView mVHUserName;
+        private TextView mVHMessage;
+        private TextView mVHDate;
     }
 }

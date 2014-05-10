@@ -1,21 +1,39 @@
 package zp.dv.KOM.mychat;
 
+import android.graphics.Color;
+import android.provider.CalendarContract;
+
 import java.util.Date;
 import java.util.Random;
 
 public class Bot {
-    private static String botName = "Bot";
-    private static String[] botSentence = {"Да", "Нет", "Возможно", "Я не уверен", "Так точно", "Ты тоже?",
+    private int mColor = Color.BLUE;
+    private String mBotName = "Bot";
+    private String[] mBotSentence = {"Да", "Нет", "Возможно", "Я не уверен", "Так точно", "Ты тоже?",
             "Возможно ты прав!", "Я здесь"};
-    private static Random random = new Random();
+    private Random mRandom = new Random();
 
-    public static String getBotName() {
-        return botName;
+    public Bot() {
     }
 
-    public static Message genBotMessage() {
-        return new Message(botName
-                , botSentence[random.nextInt(botSentence.length)]
-                , ChatActivity.simpleDateFormat.format(new Date()));
+    public Bot(String name, int color) {
+        this.mBotName = name;
+        this.mColor = color;
+    }
+
+    public int getColor() {
+        return mColor;
+    }
+
+    public String getBotName() {
+        return mBotName;
+    }
+
+    public void setBotName(String mBotName) {
+        this.mBotName = mBotName;
+    }
+
+    public String genBotMessage() {
+        return mBotSentence[mRandom.nextInt(mBotSentence.length)];
     }
 }

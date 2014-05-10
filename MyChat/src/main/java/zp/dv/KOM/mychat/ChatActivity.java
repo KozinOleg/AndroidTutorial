@@ -1,6 +1,7 @@
 package zp.dv.KOM.mychat;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,31 +15,30 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ChatActivity extends Activity {
-    private final String MESSAGE = "Message";
-    private static ArrayList<Message> messages = new ArrayList<Message>();
-    private ChatAdapter chatAdapter;
-    private ListView listViewChat;
-    private EditText messageText;
-    private Button buttonSend;
-
+    private static final String MESSAGE = "Message";
     private final static String PATTERN_DATE = "dd.MM.yy hh:mm:ss";
-    public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_DATE);
+    private SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(PATTERN_DATE);
+    private static ArrayList<Message> sMessages = new ArrayList<Message>();
+    private ChatAdapter mChatAdapter;
+    private ListView mListViewChat;
+    private EditText mMessageText;
+    private Button mButtonSend;
+    private Bot mBot;
 
     public void setButtonSend(Button buttonSend) {
-        this.buttonSend = buttonSend;
-        buttonSend.setEnabled(false);
+        this.mButtonSend = buttonSend;
     }
 
     public void setListViewChat(ListView listViewChat) {
-        this.listViewChat = listViewChat;
+        this.mListViewChat = listViewChat;
     }
 
     public EditText getMessageText() {
-        return messageText;
+        return mMessageText;
     }
 
     public void setMessageText(EditText messageText) {
-        this.messageText = messageText;
+        this.mMessageText = messageText;
     }
 
     @Override
@@ -49,13 +49,13 @@ public class ChatActivity extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(MESSAGE, messages);
+        outState.putSerializable(MESSAGE, sMessages);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        messages = (ArrayList<Message>) savedInstanceState.getSerializable(MESSAGE);
+        sMessages = (ArrayList<Message>) savedInstanceState.getSerializable(MESSAGE);
     }
 
     @Override
@@ -67,8 +67,10 @@ public class ChatActivity extends Activity {
         setButtonSend((Button) findViewById(R.id.buttonSendMessage));
         setListViewChat((ListView) findViewById(R.id.listViewChat));
 
-        chatAdapter = new ChatAdapter(this, messages);
-        listViewChat.setAdapter(chatAdapter);
+        mBot = new Bot("Вася", Color.GREEN);
+
+        mChatAdapter = new ChatAdapter(this, sMessages);
+        mListViewChat.setAdapter(mChatAdapter);
 
         setData();
         setButtonState();
@@ -80,22 +82,26 @@ public class ChatActivity extends Activity {
     }
 
     private void setData() {
-        chatAdapter.setMessages(messages);
-        chatAdapter.notifyDataSetChanged();
-        messageText.setText("");
+        mChatAdapter.setMessages(sMessages);
+        mChatAdapter.notifyDataSetChanged();
+        mMessageText.setText("");
     }
 
     private void addMessage() {
         // Message User
-        messages.add(new Message(LoginActivity.loginName,
+        sMessages.add(new Message(LoginActivity.sLoginName,
                 getMessageText().getText().toString(),
-                simpleDateFormat.format(new Date())));
+                mSimpleDateFormat.format(new Date())
+                ,Color.MAGENTA));
         // Message Bot
-        messages.add(Bot.genBotMessage());
+        sMessages.add(new Message(mBot.getBotName(),
+                mBot.genBotMessage(),
+                mSimpleDateFormat.format(new Date()),
+                mBot.getColor()));
     }
 
     private void setButtonState() {
-        messageText.addTextChangedListener(new TextWatcher() {
+        mMessageText.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -107,8 +113,8 @@ public class ChatActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0) buttonSend.setEnabled(true);
-                else buttonSend.setEnabled(false);
+                if (s.length() > 0) mButtonSend.setEnabled(true);
+                else mButtonSend.setEnabled(false);
             }
         });
     }
